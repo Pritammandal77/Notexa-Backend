@@ -6,12 +6,12 @@ const notesSchema = new Schema(
             type: String,
             required: true
         },
-        thumbNailUrl : {
-            type : String,
+        thumbNailUrl: {
+            type: String,
             required: true
         },
-        pagesCount : {
-            type : Number
+        pagesCount: {
+            type: Number
         },
         title: {
             type: String,
@@ -21,7 +21,14 @@ const notesSchema = new Schema(
             type: String,
             required: true
         },
-        // seller IDs
+        seller: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        },
+        totalDownloads : {
+            type: Number,
+            default : 0
+        }
         // buyer IDs
         // rating
     },

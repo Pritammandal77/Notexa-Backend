@@ -13,6 +13,10 @@ const notesSchema = new Schema(
         pagesCount: {
             type: Number
         },
+        viewsCount: {
+            type: Number,
+            default: 0
+        },
         title: {
             type: String,
             required: true
@@ -25,9 +29,9 @@ const notesSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User"
         },
-        totalDownloads : {
+        totalDownloads: {
             type: Number,
-            default : 0
+            default: 0
         }
         // buyer IDs
         // rating

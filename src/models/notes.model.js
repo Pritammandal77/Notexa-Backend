@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const notesSchema = new Schema(
     {
-        notesUrl: {
+        title: {
             type: String,
             required: true
         },
-        thumbNailUrl: {
+        description: {
             type: String,
             required: true
         },
@@ -17,12 +17,12 @@ const notesSchema = new Schema(
             type: Number,
             default: 0
         },
-        title: {
+        notesUrl: {
             type: String,
             required: true
         },
-        description: {
-            type: String,
+        notesSamples: {
+            type: [String],
             required: true
         },
         seller: {
@@ -33,8 +33,6 @@ const notesSchema = new Schema(
             type: Number,
             default: 0
         }
-        // buyer IDs
-        // rating
     },
     {
         timestamps: true

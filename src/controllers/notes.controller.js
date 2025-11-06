@@ -133,3 +133,21 @@ export const getAllNotes = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, notes, "All notes fetched successfully"));
 });
+
+
+export const getNotesById = asyncHandler(async (req, res) => {
+    const notesId = req.params.id
+
+    if (!notesId) {
+        throw new ApiError(404, "Notes not found")
+    }
+
+    const note = await Notes.findById({ _id: notesId })
+    .populate("seller", "fullName email profilePicture aboutUser, ");
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, note, "Notes fetched successfuly")
+        )
+})

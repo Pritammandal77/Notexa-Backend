@@ -10,10 +10,23 @@ const notesSchema = new Schema(
             type: String,
             required: true
         },
+        subject: {
+            type: String,
+            trim: true
+        },
+        className: {
+            type: String,
+            trim: true
+        },
         pagesCount: {
-            type: Number
+            type: Number,
+            required: true
         },
         viewsCount: {
+            type: Number,
+            default: 0
+        },
+        totalDownloads: {
             type: Number,
             default: 0
         },
@@ -21,18 +34,28 @@ const notesSchema = new Schema(
             type: String,
             required: true
         },
-        notesSamples: {
-            type: [String],
+        price: {
+            type: Number,
+            enum: [29, 39, 49],
+            default: 29,
+            required: true
+        },
+        notesSample1: {
+            type: String,
+            required: true
+        },
+        notesSample2: {
+            type: String,
             required: true
         },
         seller: {
-            type: Schema.Types.ObjectId,
-            ref: "User"
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         },
-        totalDownloads: {
-            type: Number,
-            default: 0
-        }
+        reviews: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Reviews"
+        }]
     },
     {
         timestamps: true

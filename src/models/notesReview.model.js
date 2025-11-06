@@ -1,15 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
-
 const notesReviewSchema = new Schema(
     {
         user: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required : true
+            required: true
         },
-        note: {
-            type: Schema.Types.ObjectId,
+        notes: {
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Notes",
             required: true,
         },

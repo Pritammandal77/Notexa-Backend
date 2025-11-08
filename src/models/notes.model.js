@@ -30,6 +30,10 @@ const notesSchema = new Schema(
             type: Number,
             default: 0
         },
+        category: {
+            type: String,
+            trim: true
+        },
         notesUrl: {
             type: String,
             required: true

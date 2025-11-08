@@ -70,7 +70,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 
 export const uploadNotes = asyncHandler(async (req, res) => {
-    const { title, description, subject = "", className = "", pagesCount, price } = req.body;
+    const { title, description, subject = "", className = "", pagesCount, category, price } = req.body;
     const userId = req.user._id;
 
     // Match frontend names
@@ -104,6 +104,7 @@ export const uploadNotes = asyncHandler(async (req, res) => {
         pagesCount,
         viewsCount: 0,
         totalDownloads: 0,
+        category,
         notesSample1: sampleUrls[0] || "",
         notesSample2: sampleUrls[1] || "",
         notesUrl: notesUrl.url,
@@ -143,11 +144,28 @@ export const getNotesById = asyncHandler(async (req, res) => {
     }
 
     const note = await Notes.findById({ _id: notesId })
-    .populate("seller", "fullName email profilePicture aboutUser, ");
+        .populate("seller", "fullName email profilePicture aboutUser, ");
 
     return res
         .status(200)
         .json(
             new ApiResponse(200, note, "Notes fetched successfuly")
         )
+})
+
+export const downloadNotes = asyncHandler(async (req, res) => {
+    try {
+        const noteId = req.params.id;
+        const note = await Notes.findById(noteId);
+
+        if (!note || !note.notesUrl) {
+            return res.status(404).json({ message: "File not found" });
+        }
+
+        // Redirect to Cloudinary file URL
+        return res.redirect(note.notesUrl);
+    } catch (error) {
+        console.error("Download error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 })

@@ -15,7 +15,6 @@ app.use(express.json({
     limit: "16kb"
 }))
 
-console.log(process.env.ACCESS_TOKEN_SECRET)
 
 app.use(express.urlencoded({
     extended: true,

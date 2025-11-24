@@ -169,3 +169,24 @@ export const downloadNotes = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 })
+
+export const getCurrentUserNotes = asyncHandler(async (req, res) => {
+    if (!req.user) {
+        throw new ApiError(401, "User not authenticated");
+    }
+
+    const userId = req.user._id;
+
+    const notes = await Notes.find({ seller: userId });
+
+    if (notes.length === 0) {
+        return res.status(200).json(
+            new ApiResponse(200, [], "No notes found")
+        );
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, notes, "User posts fetched successfully")
+    );
+});
+

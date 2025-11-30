@@ -177,7 +177,8 @@ export const getCurrentUserNotes = asyncHandler(async (req, res) => {
 
     const userId = req.user._id;
 
-    const notes = await Notes.find({ seller: userId });
+    const notes = await Notes.find({ seller: userId })
+        .populate("seller", "fullName email profilePicture aboutUser, ");
 
     if (notes.length === 0) {
         return res.status(200).json(
@@ -190,3 +191,19 @@ export const getCurrentUserNotes = asyncHandler(async (req, res) => {
     );
 });
 
+
+export const deleteNotes = asyncHandler(async (req, res) => {
+    const { notesId } = req.params
+
+    if (!notesId) {
+        throw new ApiError("notes ID is required to delete a post")
+    }
+
+    await Notes.findByIdAndDelete(notesId)
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "Note deleted successfully")
+        )
+})

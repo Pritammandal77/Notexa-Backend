@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { razorpayInstance } from "../utils/razorpay.js";
 import { User } from "../models/user.model.js";
 
-export const createOrder = async (req, res) => {
+export const createOrderToUploadNotes = async (req, res) => {
     try {
         const { userId } = req.body;
 

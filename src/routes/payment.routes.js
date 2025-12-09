@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createOrder, verifyPayment } from "../controllers/payment.controller.js";
+import { createOrderToUploadNotes, verifyPayment } from "../controllers/payment.controller.js";
 
 const paymentRouter = Router()
 
-paymentRouter.route("/create-order").post(createOrder)
+paymentRouter.route("/create-order-uploadnotes").post(createOrderToUploadNotes)
 paymentRouter.route("/verify-payment").post(verifyPayment)
 
 export default paymentRouter

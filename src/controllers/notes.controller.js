@@ -1,73 +1,10 @@
-// import { Notes } from "../models/notes.model.js";
-// import { ApiResponse } from "../utils/ApiResponse.js";
-// import { asyncHandler } from "../utils/asyncHandler.js"
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
-
-// const uploadNotes = asyncHandler(async (req, res) => {
-//     const { title, description, subject = "", className = "", pagesCount, price } = req.body
-//     const userId = req.user._id
-
-//     const notesLocalPath = req.files?.notes?.[0]?.path;
-//     const notesSample1LocalPath = req.files?.sample1?.[0]?.path;
-//     const notesSample2LocalPath = req.files?.sample2?.[0]?.path;
-
-//     let notesUrl = { url: "" };
-//     let sample1Url = { url: "" };
-//     let sample2Url = { url: "" };
-
-//     // Upload image if available
-//     if (notesLocalPath) {
-//         notesUrl = await uploadOnCloudinary(notesLocalPath);
-//         if (!notesUrl?.url) throw new ApiError(400, "Error while uploading notes");
-//     }
-
-//     // Upload image if available
-//     if (notesSample1LocalPath) {
-//         sample1Url = await uploadOnCloudinary(notesSample1LocalPath);
-//         if (!sample1Url?.url) throw new ApiError(400, "Error while uploading sample 1");
-//     }
-//     // Upload image if available
-//     if (notesSample2LocalPath) {
-//         sample2Url = await uploadOnCloudinary(notesSample2LocalPath);
-//         if (!sample2Url?.url) throw new ApiError(400, "Error while uploading sample 2");
-//     }
-
-//     const newNotes = await Notes.create(
-//         {
-//             title,
-//             description,
-//             subject,
-//             className: className,
-//             pagesCount,
-//             viewsCount: 0,
-//             totalDownloads: 0,
-//             notesSample1: sample1Url.url,
-//             notesSample2: sample2Url.url,
-//             notesUrl: notesUrl.url,
-//             price,
-//             seller: userId
-//         }
-//     )
-
-//     return res
-//         .status(201)
-//         .json(
-//             new ApiResponse(201, { newNotes }, "Notes uploaded successfully")
-//         );
-
-// })
-
-// export {
-//     uploadNotes
-// }
-
-
 import { Notes } from "../models/notes.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
+import axios from "axios"
 
 export const uploadNotes = asyncHandler(async (req, res) => {
     const { title, description, subject = "", className = "", pagesCount, category, price } = req.body;
@@ -162,13 +99,29 @@ export const downloadNotes = asyncHandler(async (req, res) => {
             return res.status(404).json({ message: "File not found" });
         }
 
-        // Redirect to Cloudinary file URL
-        return res.redirect(note.notesUrl);
+        const sellerName = "Pritam Mandal";
+        const watermarkedUrl = note.notesUrl.replace(
+            "/upload/",
+            `/upload/l_text:Arial_50_bold:Sold%20by%20${encodeURIComponent(sellerName)},co_rgb:777,o_40,g_center/`
+        );
+
+        // Fetch watermarked PDF as stream from Cloudinary 
+        const cloudinaryResponse = await axios.get(watermarkedUrl, {
+            responseType: "stream",
+        });
+
+        // Set download headers
+        res.setHeader("Content-Disposition", `attachment; filename="note.pdf"`);
+        res.setHeader("Content-Type", "application/pdf");
+
+        cloudinaryResponse.data.pipe(res);
+
     } catch (error) {
         console.error("Download error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-})
+});
+
 
 export const getCurrentUserNotes = asyncHandler(async (req, res) => {
     if (!req.user) {

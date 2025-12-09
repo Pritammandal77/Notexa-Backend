@@ -28,11 +28,14 @@ app.use(cookieParser())
 app.use(passport.initialize());
 
 import authRoutes from './routes/auth.js'
-import notesRouter from "./routes/notes.routes.js";
+import notesRoutes from "./routes/notes.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
 
 app.use('/api/auth', authRoutes);
 
-app.use("/api/v1/notes", notesRouter)
+app.use("/api/v1/notes", notesRoutes)
+
+app.use('/api/v1/payments', paymentRoutes)
 
 app.get("/hello", (req, res) => {
     return res

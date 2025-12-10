@@ -26,6 +26,30 @@ export const createOrderToUploadNotes = async (req, res) => {
 };
 
 
+export const createOrderToBuyNotes = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        const options = {
+            amount: 29 * 100,
+            currency: "INR",
+            receipt: `receipt_${Date.now()}`,
+        };
+
+        const order = await razorpayInstance.orders.create(options);
+
+        res.status(200).json({
+            success: true,
+            order,
+        });
+
+    } catch (error) {
+        // console.log(error);
+        res.status(500).json({ success: false, message: "Order creation failed" });
+    }
+};
+
+
 
 export const verifyPayment = async (req, res) => {
     try {

@@ -271,7 +271,13 @@ router.post('/logout', async (req, res) => {
     const refreshId = req.cookies['refresh_token_id'];
     if (refreshId) await RefreshToken.findByIdAndDelete(refreshId);
 
-    const cookieOptions = { path: '/', domain: COOKIE_DOMAIN };
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProd,               // MUST match creation
+      sameSite: isProd ? 'None' : 'Lax',
+      domain: COOKIE_DOMAIN,
+      path: '/'
+    };
 
     res.clearCookie('access_token', cookieOptions);
     res.clearCookie('refresh_token', cookieOptions);
@@ -283,5 +289,3 @@ router.post('/logout', async (req, res) => {
     return res.status(500).json({ error: 'Logout failed' });
   }
 });
-
-export default router;

@@ -132,7 +132,7 @@
 //     res.clearCookie('access_token', { domain: process.env.COOKIE_DOMAIN || 'localhost' });
 //     res.clearCookie('refresh_token', { domain: process.env.COOKIE_DOMAIN || 'localhost' });
 //     res.clearCookie('refresh_token_id', { domain: process.env.COOKIE_DOMAIN || 'localhost' });
-   
+
 //     return res.json({ ok: true });
 //   } catch (err) {
 //     console.error(err);
@@ -187,29 +187,23 @@ router.get(
       // -----------------------
       res.cookie('access_token', accessToken, {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
+        secure: true,
+        sameSite: "None",
         maxAge: 2 * 60 * 60 * 1000, // 2h
-        domain: COOKIE_DOMAIN,
       });
 
       res.cookie('refresh_token', refreshPlain, {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
+        secure: true,
+        sameSite: "None",
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
-        domain: COOKIE_DOMAIN,
       });
 
       res.cookie('refresh_token_id', refreshId.toString(), {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
+        secure: true,
+        sameSite: "None",
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        domain: COOKIE_DOMAIN,
       });
 
       return res.redirect(`${FRONTEND_URL}/`);
@@ -263,11 +257,9 @@ router.post('/refresh', async (req, res) => {
 
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
-      path: '/',
+      secure: true,
+      sameSite: "None",
       maxAge: 2 * 60 * 60 * 1000,
-      domain: COOKIE_DOMAIN,
     });
 
     return res.json({ ok: true });

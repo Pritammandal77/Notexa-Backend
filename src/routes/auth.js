@@ -289,3 +289,5 @@ router.post('/logout', async (req, res) => {
     return res.status(500).json({ error: 'Logout failed' });
   }
 });
+
+export default router;

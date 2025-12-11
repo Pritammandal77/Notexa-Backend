@@ -143,7 +143,6 @@
 // export default router;
 
 
-
 import express from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
@@ -156,7 +155,9 @@ const router = express.Router();
 
 const isProd = process.env.NODE_ENV === 'production';
 const FRONTEND_URL = process.env.FRONTEND_URL;
-const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || (isProd ? undefined : 'localhost');
+
+// Set domain only in production, leave undefined for localhost
+const COOKIE_DOMAIN = isProd ? process.env.COOKIE_DOMAIN : undefined;
 
 // -----------------------
 // 1) Start Google OAuth
@@ -183,28 +184,18 @@ router.get(
       });
 
       // -----------------------
-      // Set cookies (secure for production, cross-site friendly)
+      // Cookies (works for local & prod)
       // -----------------------
-      res.cookie('access_token', accessToken, {
+      const cookieOptions = {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 2 * 60 * 60 * 1000, // 2h
-      });
+        secure: isProd,
+        sameSite: isProd ? 'None' : 'Lax', // cross-site for prod, Lax for local
+        path: '/',
+      };
 
-      res.cookie('refresh_token', refreshPlain, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30d
-      });
-
-      res.cookie('refresh_token_id', refreshId.toString(), {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie('access_token', accessToken, { ...cookieOptions, maxAge: 2 * 60 * 60 * 1000, domain: COOKIE_DOMAIN });
+      res.cookie('refresh_token', refreshPlain, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000, domain: COOKIE_DOMAIN });
+      res.cookie('refresh_token_id', refreshId.toString(), { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000, domain: COOKIE_DOMAIN });
 
       return res.redirect(`${FRONTEND_URL}/`);
     } catch (err) {
@@ -255,12 +246,15 @@ router.post('/refresh', async (req, res) => {
     const user = await User.findById(doc.user);
     const newAccessToken = createAccessToken(user);
 
-    res.cookie('access_token', newAccessToken, {
+    const cookieOptions = {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 2 * 60 * 60 * 1000,
-    });
+      secure: isProd,
+      sameSite: isProd ? 'None' : 'Lax',
+      path: '/',
+      domain: COOKIE_DOMAIN,
+    };
+
+    res.cookie('access_token', newAccessToken, { ...cookieOptions, maxAge: 2 * 60 * 60 * 1000 });
 
     return res.json({ ok: true });
   } catch (err) {
@@ -277,9 +271,11 @@ router.post('/logout', async (req, res) => {
     const refreshId = req.cookies['refresh_token_id'];
     if (refreshId) await RefreshToken.findByIdAndDelete(refreshId);
 
-    res.clearCookie('access_token', { path: '/', domain: COOKIE_DOMAIN });
-    res.clearCookie('refresh_token', { path: '/', domain: COOKIE_DOMAIN });
-    res.clearCookie('refresh_token_id', { path: '/', domain: COOKIE_DOMAIN });
+    const cookieOptions = { path: '/', domain: COOKIE_DOMAIN };
+
+    res.clearCookie('access_token', cookieOptions);
+    res.clearCookie('refresh_token', cookieOptions);
+    res.clearCookie('refresh_token_id', cookieOptions);
 
     return res.json({ ok: true });
   } catch (err) {

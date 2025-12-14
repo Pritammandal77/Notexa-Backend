@@ -17,7 +17,7 @@ const notesReviewSchema = new Schema(
             required: true,
             trim: true,
         },
-        stars: {
+        rating: {
             type: Number,
             required: true
         }

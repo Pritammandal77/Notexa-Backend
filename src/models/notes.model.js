@@ -26,10 +26,10 @@ const notesSchema = new Schema(
             type: Number,
             default: 0
         },
-        totalDownloads: {
-            type: Number,
-            default: 0
-        },
+        totalDownloads: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         category: {
             type: String,
             trim: true

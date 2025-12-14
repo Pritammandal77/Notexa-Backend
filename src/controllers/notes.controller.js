@@ -160,3 +160,33 @@ export const deleteNotes = asyncHandler(async (req, res) => {
             new ApiResponse(200, {}, "Note deleted successfully")
         )
 })
+
+
+export const countNotesDownloads = asyncHandler(async (req, res) => {
+    const { notesId } = req.body;
+    const currUserId = req.user._id;
+
+    if (!notesId) {
+        throw new ApiError(400, "Notes ID is required");
+    }
+
+    const updatedNotes = await Notes.findByIdAndUpdate(
+        notesId,
+        {
+            $addToSet: { totalDownloads: currUserId }
+        },
+        { new: true }
+    );
+
+    if (!updatedNotes) {
+        throw new ApiError(404, "Notes not found");
+    }
+
+    res.status(200).json(
+        new ApiResponse(
+            200,
+            { totalDownloads: updatedNotes.totalDownloads.length },
+            "Notes downloads count fetched successfully"
+        )
+    );
+});

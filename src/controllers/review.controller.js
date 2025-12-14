@@ -12,7 +12,7 @@ export const addNewReview = asyncHandler(async (req, res) => {
         throw new ApiError(400, "rating & review both are required to add a review")
     }
 
-    if(!currUser){
+    if (!currUser) {
         throw new ApiError(400, "User not authenticated")
     }
 
@@ -24,9 +24,25 @@ export const addNewReview = asyncHandler(async (req, res) => {
     })
 
     return res.
-    status(200)
-    .json(
-        new ApiResponse(200, addReview, "Review added successfully")
-    )
+        status(200)
+        .json(
+            new ApiResponse(200, addReview, "Review added successfully")
+        )
 
+})
+
+
+export const fetchAllReviewsById = asyncHandler(async (req, res) => {
+    const notesId  = req.params.id
+
+    if(!notesId){
+        throw new ApiError(400, "NotesId not found")
+    }
+
+    const reviews = await Reviews.find({notes : notesId}).populate("user", "fullName email profilePicture")
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200, reviews , "Reviews fetched successfully")
+    )
 })

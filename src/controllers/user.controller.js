@@ -3,15 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-
-const getHello = async (req, res) => {
-    return res
-        .json(
-            "User registered & logged in successfully"
-        );
-}
-
-
 export const addNoteToPurchased = asyncHandler(async (req, res) => {
     const { notesId } = req.body
     const currUser = req.user._id
@@ -35,4 +26,16 @@ export const addNoteToPurchased = asyncHandler(async (req, res) => {
         )
 })
 
-export { getHello }                                                                                                                                                                         
+export const getPurchasedNotes = asyncHandler(async (req, res) => {
+    const currUser = req.user._id;
+
+    const downloadedNotes = await User.findById(currUser)
+        .populate("notesPurchased", "_id title notesSample1 price category subject")
+        .select("notesPurchased");
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, downloadedNotes, "Downloaded notes fetched successfully")
+        )
+})

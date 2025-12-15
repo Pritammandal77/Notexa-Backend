@@ -40,11 +40,5 @@ app.use('/api/v1/payments', paymentRoutes)
 
 app.use("/api/v1/me", userRoutes)
 
-app.get("/hello", (req, res) => {
-    return res
-        .json(
-            "Hello World"
-        )
-})
 
 export { app }

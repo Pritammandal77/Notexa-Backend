@@ -90,7 +90,7 @@
 
 
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Mongoose, Schema } from "mongoose";
 
 const userSchema = new Schema(
     {
@@ -100,9 +100,9 @@ const userSchema = new Schema(
             default: null,
         },
         fullName: {
-            type: String, // ✅ was Number before — fixed to String
+            type: String,
             required: function () {
-                return !this.googleId; // required only if not a Google user
+                return !this.googleId;
             },
         },
         email: {
@@ -133,6 +133,15 @@ const userSchema = new Schema(
             trim: true,
             default: "",
         },
+        instagramLink: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+        notesPurchased: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Notes"
+        }]
     },
     {
         timestamps: true,

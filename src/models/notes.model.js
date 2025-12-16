@@ -22,10 +22,10 @@ const notesSchema = new Schema(
             type: Number,
             required: true
         },
-        viewsCount: {
-            type: Number,
-            default: 0
-        },
+        viewsCount: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         totalDownloads: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

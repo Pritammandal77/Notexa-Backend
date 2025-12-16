@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { countNotesDownloads, deleteNotes, downloadNotes, getAllNotes, getCurrentUserNotes, getNotesById, uploadNotes } from "../controllers/notes.controller.js";
+import { countNotesDownloads, countViewsOfNotes, deleteNotes, downloadNotes, getAllNotes, getCurrentUserNotes, getNotesById, uploadNotes } from "../controllers/notes.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { addNewReview, fetchAllReviewsById } from "../controllers/review.controller.js";
@@ -34,5 +34,7 @@ notesRouter.route("/update-notes-downloads-count").patch(verifyJWT, countNotesDo
 notesRouter.route("/add-review").post(verifyJWT, addNewReview)
 
 notesRouter.route("/reviews/:id").get(fetchAllReviewsById)
+
+notesRouter.route("/count-views/:id").patch(verifyJWT, countViewsOfNotes)
 
 export default notesRouter

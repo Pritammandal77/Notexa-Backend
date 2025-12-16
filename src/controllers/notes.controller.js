@@ -190,3 +190,32 @@ export const countNotesDownloads = asyncHandler(async (req, res) => {
         )
     );
 });
+
+
+export const countViewsOfNotes = asyncHandler(async (req, res) => {
+    const notesId = req.params.id
+    const currUserId = req.user?._id;
+
+    if (!currUserId) {
+        throw new ApiError(400, "user not loggedin")
+    }
+
+    const updateNotesViews = await Notes.findByIdAndUpdate(
+        notesId,
+        {
+            $addToSet: { viewsCount: currUserId }
+        },
+        { new: true }
+    );
+
+    if (!updateNotesViews) {
+        throw new ApiError(404, "Notes not found")
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, { totalViews: updateNotesViews.viewsCount.length }, "Notes views updated sucessfully")
+        )
+
+})

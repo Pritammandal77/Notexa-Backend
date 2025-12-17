@@ -219,3 +219,38 @@ export const countViewsOfNotes = asyncHandler(async (req, res) => {
         )
 
 })
+
+
+export const updateNotesData = asyncHandler(async (req, res) => {
+    const { title, description, subject, className, pagesCount, category, notesId } = req.body;
+   
+    console.log(title)
+    console.log(notesId)
+    
+    if (!notesId) {
+        throw new ApiError(400, "Notes not found")
+    }
+
+    const updatedNotes = await Notes.findByIdAndUpdate(
+        notesId,
+        {
+            title,
+            description,
+            subject,
+            className,
+            pagesCount,
+            category,
+        },
+        { new: true }
+    )
+
+    if (!updatedNotes) {
+        throw new ApiError(404, "something went wrong while updating the notes")
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, updatedNotes, "Notes updated successfully")
+        )
+})

@@ -33,16 +33,33 @@ export const addNewReview = asyncHandler(async (req, res) => {
 
 
 export const fetchAllReviewsById = asyncHandler(async (req, res) => {
-    const notesId  = req.params.id
+    const notesId = req.params.id
 
-    if(!notesId){
+    if (!notesId) {
         throw new ApiError(400, "NotesId not found")
     }
 
-    const reviews = await Reviews.find({notes : notesId}).populate("user", "fullName email profilePicture")
+    const reviews = await Reviews.find({ notes: notesId }).populate("user", "fullName email profilePicture")
 
     return res.status(200)
-    .json(
-        new ApiResponse(200, reviews , "Reviews fetched successfully")
-    )
+        .json(
+            new ApiResponse(200, reviews, "Reviews fetched successfully")
+        )
+})
+
+
+export const deleteReview = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    if (!id) {
+        throw new ApiError("review Id is required to delete review")
+    }
+
+    await Reviews.findByIdAndDelete(id)
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "Review deleted successfully")
+        )
 })

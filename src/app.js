@@ -31,6 +31,7 @@ import authRoutes from './routes/auth.js'
 import notesRoutes from "./routes/notes.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import reviewRouter from "./routes/reviews.routes.js";
 
 app.use('/api/auth', authRoutes);
 
@@ -40,5 +41,6 @@ app.use('/api/v1/payments', paymentRoutes)
 
 app.use("/api/v1/me", userRoutes)
 
+app.use("/api/v1/review", reviewRouter)
 
 export { app }

@@ -13,7 +13,7 @@ export const createOrderToUploadNotes = async (req, res) => {
         };
 
         const order = await razorpayInstance.orders.create(options);
-
+    
         res.status(200).json({
             success: true,
             order,
@@ -50,7 +50,6 @@ export const createOrderToBuyNotes = async (req, res) => {
 };
 
 
-
 export const verifyPayment = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userId } = req.body;
@@ -71,7 +70,7 @@ export const verifyPayment = async (req, res) => {
             canUploadNotes: true,
             paymentId: razorpay_payment_id
         });
-
+   
         res.status(200).json({ success: true, message: "Payment verified" });
     } catch (error) {
         console.log(error);

@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from "cloudinary"
-import fs from "fs"
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,31 +9,29 @@ cloudinary.config({
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if (!localFilePath) {
-            alert("Could not find the path")
-            return
-        }
+        if (!localFilePath) return null;
 
         let resourceType = "auto";
         if (localFilePath.endsWith(".pdf")) resourceType = "raw";
 
-        //to upload file on cloudinary
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: resourceType,
-        })
+        });
 
-        //file has been uploaded successfully
-        // console.log("file is uploaded on Cloudinary", response.url)
-        fs.unlinkSync(localFilePath)
-        // return response //old code
-        return response.secure_url;   // Return the HTTPS version of the uploaded file URL to avoid mixed content issues on frontend
+        fs.unlinkSync(localFilePath);
+
+        return {
+            url: response.secure_url,  
+            public_id: response.public_id
+        };
 
     } catch (error) {
-        //agar hamari file uplaod nahi hoti hain , to usse local server se bhe toh hatana pdega na...
-        fs.unlinkSync(localFilePath)  //it removes the locally saved temporary file as the upload operation got failed
+        if (fs.existsSync(localFilePath)) {
+            fs.unlinkSync(localFilePath);
+        }
+        console.error("Cloudinary Upload Error:", error);
         return null;
     }
-}
+};
 
-
-export { uploadOnCloudinary }
+export { uploadOnCloudinary };

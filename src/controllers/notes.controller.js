@@ -6,41 +6,55 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import axios from "axios"
 
-export const uploadNotes = asyncHandler(async (req, res) => {
-    const { title, description, subject = "", className = "", pagesCount, category, price } = req.body;
-    const userId = req.user._id;
 
-    // Match frontend names
+export const uploadNotes = asyncHandler(async (req, res) => {
+    const {
+        title,
+        description,
+        subject = "",
+        className = "",
+        pagesCount,
+        category,
+        price
+    } = req.body;
+
+    const userId = req.user?._id;
+    if (!userId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
     const notesLocalPath = req.files?.notesFile?.[0]?.path;
     const sampleLocalPaths = req.files?.samples || [];
 
-    let notesUrl = { url: "" };
+    if (!notesLocalPath) {
+        throw new ApiError(400, "Notes file is required");
+    }
+
+    let notesUrl;
     let sampleUrls = [];
 
-    // Upload main notes file
-    if (notesLocalPath) {
-        notesUrl = await uploadOnCloudinary(notesLocalPath);
-        if (!notesUrl?.url) throw new ApiError(400, "Error while uploading notes");
+    notesUrl = await uploadOnCloudinary(notesLocalPath);
+
+    if (!notesUrl?.url) {
+        throw new ApiError(400, "Error while uploading notes");
     }
 
-    // Upload sample images
     for (const file of sampleLocalPaths) {
         const uploaded = await uploadOnCloudinary(file.path);
-        if (uploaded?.url) sampleUrls.push(uploaded.url);
+
+        if (uploaded?.url) {
+            sampleUrls.push(uploaded.url);
+        }
     }
 
-    // Ensure at least one file exists
-    if (!notesUrl.url) throw new ApiError(400, "Notes file is required");
-
-    // Create Notes in DB
     const newNotes = await Notes.create({
         title,
         description,
         subject,
         className,
         pagesCount,
-        viewsCount: 0,
-        totalDownloads: 0,
+        viewsCount: [],
+        totalDownloads: [],
         category,
         notesSample1: sampleUrls[0] || "",
         notesSample2: sampleUrls[1] || "",
@@ -49,10 +63,12 @@ export const uploadNotes = asyncHandler(async (req, res) => {
         seller: userId,
     });
 
+
     return res.status(201).json(
-        new ApiResponse(201, { newNotes }, "Notes uploaded successfully")
+        new ApiResponse(201, newNotes, "Notes uploaded successfully")
     );
 });
+
 
 
 export const getAllNotes = asyncHandler(async (req, res) => {
@@ -223,10 +239,10 @@ export const countViewsOfNotes = asyncHandler(async (req, res) => {
 
 export const updateNotesData = asyncHandler(async (req, res) => {
     const { title, description, subject, className, pagesCount, category, notesId } = req.body;
-   
+
     console.log(title)
     console.log(notesId)
-    
+
     if (!notesId) {
         throw new ApiError(400, "Notes not found")
     }

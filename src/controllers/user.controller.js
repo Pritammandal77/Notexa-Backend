@@ -39,3 +39,15 @@ export const getPurchasedNotes = asyncHandler(async (req, res) => {
             new ApiResponse(200, downloadedNotes, "Downloaded notes fetched successfully")
         )
 })
+
+export const getUserById = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const user = await User.findById(id, "-googleId -notesPurchased")
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, user, "user fetched successfully")
+        )
+})

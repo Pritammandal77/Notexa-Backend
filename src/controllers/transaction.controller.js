@@ -1,11 +1,11 @@
-import { Notes } from "../models/notes.model";
-import { Transaction } from "../models/transaction.model";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Notes } from "../models/notes.model.js";
+import { Transaction } from "../models/transaction.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createNewTransaction = asyncHandler(async (req, res) => {
     const { notesId, paymentId } = req.body;
-    
+
     const buyerId = req.user._id;
 
     // prevent duplicate transaction

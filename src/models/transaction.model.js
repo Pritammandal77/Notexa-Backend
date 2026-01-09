@@ -13,13 +13,14 @@ const transactionSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        BuyerId: {
+        buyerId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
         amount: {
-            type: Number
-        },
+            type: Number,
+            default : 29
+        }, 
         sellerShare: {
             type: Number,
             required: true
@@ -28,7 +29,8 @@ const transactionSchema = new Schema(
             type: Number
         },
         paymentId: {
-            type: String
+            type: String,
+            unique : true
         }
     },
     {

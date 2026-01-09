@@ -138,7 +138,6 @@ export const downloadNotes = asyncHandler(async (req, res) => {
     }
 });
 
-
 export const getCurrentUserNotes = asyncHandler(async (req, res) => {
     if (!req.user) {
         throw new ApiError(401, "User not authenticated");
@@ -160,6 +159,22 @@ export const getCurrentUserNotes = asyncHandler(async (req, res) => {
     );
 });
 
+export const getUserAllNotesByUserId = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+
+    const allNotes = await Notes.find({ seller: userId })
+
+    if (allNotes.length === 0) {
+        return res.status(200).json(
+            new ApiResponse(200, [], "No notes found")
+        );
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, allNotes, "notes fetched successfully")
+    );
+
+})
 
 export const deleteNotes = asyncHandler(async (req, res) => {
     const { notesId } = req.params

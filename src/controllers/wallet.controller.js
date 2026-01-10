@@ -1,7 +1,6 @@
-import { Transaction } from "../models/transaction.model";
-import { Wallet } from "../models/wallet.model";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Wallet } from "../models/wallet.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 export const createOrFetchWallet = asyncHandler(async (req, res) => {
@@ -9,6 +8,10 @@ export const createOrFetchWallet = asyncHandler(async (req, res) => {
     const user = req.user._id
 
     const isAlreadyWalletExists = await Wallet.findOne({ user: user })
+        .populate({
+            path: "user",
+            select: "fullName email profilePicture"
+        });
 
     if (isAlreadyWalletExists) {
         return res

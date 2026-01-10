@@ -1,5 +1,6 @@
 import { Notes } from "../models/notes.model.js";
 import { Transaction } from "../models/transaction.model.js";
+import { Wallet } from "../models/wallet.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -38,6 +39,23 @@ export const createNewTransaction = asyncHandler(async (req, res) => {
         platformShare,
         paymentId
     });
+
+
+    // update seller wallet
+    await Wallet.findOneAndUpdate(
+        { user: notes.seller },          // seller ka wallet
+        {
+            $inc: {
+                totalEarning: sellerShare,
+                availableBalance: sellerShare
+            },
+            $addToSet: {
+                notesSold: notesId        // duplicate notesId nahi jayega
+            }
+        },
+        { new: true }
+    );
+
 
     return res.status(201).json(
         new ApiResponse(201, transaction, "Transaction created successfully")

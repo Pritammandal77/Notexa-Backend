@@ -1,9 +1,8 @@
-import { Withdraw } from "../models/withdraw.model";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { Wallet } from "../models/wallet.model";
-
+import { Wallet } from "../models/wallet.model.js";
+import { Withdraw } from "../models/withdraw.model.js"
 
 export const withdrawPayout = asyncHandler(async (req, res) => {
     const { amount, upiId } = req.body;
@@ -63,4 +62,48 @@ export const withdrawPayout = asyncHandler(async (req, res) => {
 })
 
 
+export const getAllWithDrawRequest = asyncHandler(async (req, res) => {
+    const withDrawRequests = await Withdraw.find({})
+        .sort({ createdAt: -1 })
 
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, withDrawRequests, "All withdraw requests fetched successfully")
+        )
+})
+
+
+export const processWithDrawRequests = asyncHandler(async (req, res) => {
+    const { status, withdrawId } = req.body;
+
+    const allowedStatus = ["pending", "processing", "fulfilled"];
+    if (!allowedStatus.includes(status)) {
+        throw new ApiError(400, "Invalid withdraw status");
+    }
+
+    const updatedWithdrawReq = await Withdraw.findByIdAndUpdate(
+        withdrawId,
+        { $set: { status } },
+        { new: true }
+    );
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "Withdraw request status updated successfully")
+        )
+})
+
+
+export const getCurrUserWithdrawReq = asyncHandler(async (req, res) => {
+    const user = req.user._id
+
+    const withdrawRequests = await Withdraw.find({ requestedUser: user }).sort({ createdAt: -1 });
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, withdrawRequests, "Withdraw requests fetched successfully")
+        )
+})

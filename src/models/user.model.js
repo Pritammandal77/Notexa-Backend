@@ -49,7 +49,12 @@ const userSchema = new Schema(
         notesPurchased: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Notes"
-        }]
+        }],
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user"
+        }
     },
     {
         timestamps: true,

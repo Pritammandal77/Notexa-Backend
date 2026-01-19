@@ -17,7 +17,7 @@ export const withdrawPayout = asyncHandler(async (req, res) => {
         throw new ApiError(400, "UPI Id is required")
     }
 
-    const MIN_WITHDRAW = 50;
+    const MIN_WITHDRAW = 10;
 
     if (amount < MIN_WITHDRAW) {
         throw new ApiError(400, `Minimum withdraw amount is ₹${MIN_WITHDRAW}`);
@@ -64,6 +64,10 @@ export const withdrawPayout = asyncHandler(async (req, res) => {
 
 export const getAllWithDrawRequest = asyncHandler(async (req, res) => {
     const withDrawRequests = await Withdraw.find({})
+        .populate({
+            path: "requestedUser",
+            select: "fullName email profilePicture"
+        })
         .sort({ createdAt: -1 })
 
     return res
@@ -77,7 +81,7 @@ export const getAllWithDrawRequest = asyncHandler(async (req, res) => {
 export const processWithDrawRequests = asyncHandler(async (req, res) => {
     const { status, withdrawId } = req.body;
 
-    const allowedStatus = ["pending", "processing", "fulfilled"];
+    const allowedStatus = ["pending", "processing", "rejected", "fulfilled"];
     if (!allowedStatus.includes(status)) {
         throw new ApiError(400, "Invalid withdraw status");
     }

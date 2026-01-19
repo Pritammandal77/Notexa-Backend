@@ -18,12 +18,12 @@ const withdrawSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "processing", "fulfilled"],
+            enum: ["pending", "processing", "rejected", "fulfilled"],
             default: "pending"
         }
     },
     {
-        timestamps : true
+        timestamps: true
     }
 )
 

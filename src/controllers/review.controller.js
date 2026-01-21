@@ -39,7 +39,9 @@ export const fetchAllReviewsById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "NotesId not found")
     }
 
-    const reviews = await Reviews.find({ notes: notesId }).populate("user", "fullName email profilePicture")
+    const reviews = await Reviews.find({ notes: notesId })
+        .populate("user", "fullName email profilePicture")
+        .sort({ createdAt: -1 })
 
     return res.status(200)
         .json(

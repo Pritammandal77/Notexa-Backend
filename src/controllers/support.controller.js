@@ -1,7 +1,7 @@
-import { Support } from "../models/support.model"
-import { ApiError } from "../utils/ApiError"
-import { ApiResponse } from "../utils/ApiResponse"
-import { asyncHandler } from "../utils/asyncHandler"
+import { Support } from "../models/support.model.js"
+import { ApiError } from "../utils/ApiError.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 
 export const createSupport = asyncHandler(async (req, res) => {
     const { fullName, email, subject, message } = req.body

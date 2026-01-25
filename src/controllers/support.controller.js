@@ -39,3 +39,24 @@ export const fetchAllSupportRequests = asyncHandler(async (req, res) => {
             new ApiResponse(200, supports, "Fetched all support requests successfully")
         )
 })
+
+
+export const changeSupportReqStatus = asyncHandler(async (req, res) => {
+    const { status, supportId } = req.body;
+
+    const allowedStatus = ["open", "in_progress", "resolved"];
+    if (!allowedStatus.includes(status)) {
+        throw new ApiError(400, "Invalid support status");
+    }
+
+    const support = await Support.findByIdAndUpdate(supportId,
+        { $set: { status } },
+        { new: true }
+    )
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "Support request status updated successfully")
+        )
+})

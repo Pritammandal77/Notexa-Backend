@@ -51,3 +51,41 @@ export const getUserById = asyncHandler(async (req, res) => {
             new ApiResponse(200, user, "user fetched successfully")
         )
 })
+
+
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+
+export const updateProfile = asyncHandler(async (req, res) => {
+    const { fullName, aboutUser, linkedinLink, instagramLink } = req.body;
+    const id = req.user._id;
+
+    let profilePicture;
+
+    if (req.file) {
+        const cloudinaryRes = await uploadOnCloudinary(req.file.path);
+
+        if (!cloudinaryRes) {
+            return res.status(500).json(
+                new ApiResponse(500, null, "Profile image upload failed")
+            );
+        }
+
+        profilePicture = cloudinaryRes.url;
+    }
+
+    const updatedProfile = await User.findByIdAndUpdate(
+        id,
+        {
+            fullName,
+            aboutUser,
+            linkedinLink,
+            instagramLink,
+            ...(profilePicture && { profilePicture }),
+        },
+        { new: true }
+    );
+
+    return res.status(200).json(
+        new ApiResponse(200, updatedProfile, "Profile updated successfully")
+    );
+});

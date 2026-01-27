@@ -2,7 +2,7 @@
 
 Notexa Backend is a **production-ready REST API** that powers the Notexa platform, enabling secure authentication, user management, notes handling, purchases, and admin operations.
 
-This repository contains the **backend codebase only**.  
+This repository contains the **backend codebase only**.
 
 ## 💡 Features
 

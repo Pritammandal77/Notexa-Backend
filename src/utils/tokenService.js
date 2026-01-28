@@ -35,10 +35,10 @@ export const createRefreshToken = async ({ userId, ip, userAgent }) => {
   return { token: plain, id: doc._id, expiresAt };
 };
 
-export const rotateRefreshToken = async ({ oldTokenPlain, userId, ip, userAgent }) => {
-  // optional: find and remove existing token, then create new
-  // Implementation detail left for advanced rotation
-};
+// export const rotateRefreshToken = async ({ oldTokenPlain, userId, ip, userAgent }) => {
+//   // optional: find and remove existing token, then create new
+//   // Implementation detail left for advanced rotation
+// };
 
 export const consumeRefreshToken = async ({ tokenPlain }) => {
   // find a refresh token doc by matching hash

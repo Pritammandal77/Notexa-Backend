@@ -27,7 +27,6 @@ passport.use(new GoogleStrategy({
         profilePicture: profile.photos?.[0]?.value
       });
     } else if (!user.googleId) {
-      // attach googleId if user existed via email
       user.googleId = profile.id;
       await user.save();
     }

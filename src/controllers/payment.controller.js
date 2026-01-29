@@ -86,36 +86,32 @@ import { User } from "../models/user.model.js";
 
 export const createOrderToUploadNotes = async (req, res) => {
     try {
-        const { userId } = req.body;
-
         const razorpay = getRazorpayInstance();
 
         const options = {
-            amount: 9 * 100, // ₹9 → paise
+            amount: 9 * 100,
             currency: "INR",
-            receipt: `upload_${userId}_${Date.now()}`,
+            receipt: `rcpt_${Date.now().toString().slice(-8)}`
         };
 
         const order = await razorpay.orders.create(options);
 
         return res.status(200).json({
             success: true,
-            order,
+            order
         });
 
     } catch (error) {
         console.error("Razorpay order error:", error);
         return res.status(500).json({
             success: false,
-            message: "Order creation failed",
+            message: "Order creation failed"
         });
     }
 };
 
 
-/**
- * CREATE ORDER – BUY NOTES
- */
+/* CREATE ORDER – BUY NOTES */
 export const createOrderToBuyNotes = async (req, res) => {
     try {
         const { userId } = req.body;

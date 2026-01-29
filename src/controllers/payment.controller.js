@@ -65,7 +65,7 @@ export const verifyPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid signature" });
         }
 
-        // IMPORTANT: upload permission store in DB
+        // upload permission store in DB
         await User.findByIdAndUpdate(userId, {
             canUploadNotes: true,
             paymentId: razorpay_payment_id

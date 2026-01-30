@@ -121,7 +121,7 @@ export const createOrderToBuyNotes = async (req, res) => {
         const options = {
             amount: 29 * 100, // ₹29 → paise
             currency: "INR",
-            receipt: `buy_${userId}_${Date.now()}`,
+            receipt: `buy_${userId.slice(-6)}_${Date.now().toString().slice(-6)}`
         };
 
         const order = await razorpay.orders.create(options);

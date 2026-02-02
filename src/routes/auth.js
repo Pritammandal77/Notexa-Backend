@@ -14,14 +14,10 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 // Set domain only in production, leave undefined for localhost
 const COOKIE_DOMAIN = isProd ? process.env.COOKIE_DOMAIN : undefined;
 
-// -----------------------
 // 1) Start Google OAuth
-// -----------------------
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// -----------------------
 // 2) Google Callback
-// -----------------------
 router.get(
   '/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: `${FRONTEND_URL}/auth/failure` }),
@@ -38,9 +34,7 @@ router.get(
         userAgent,
       });
 
-      // -----------------------
       // Cookies (works for local & prod)
-      // -----------------------
       const cookieOptions = {
         httpOnly: true,
         secure: isProd,
@@ -60,9 +54,7 @@ router.get(
   }
 );
 
-// -----------------------
 // 3) Get user info (protected)
-// -----------------------
 router.get('/me', async (req, res) => {
   try {
     const token = req.cookies['access_token'];
@@ -78,10 +70,9 @@ router.get('/me', async (req, res) => {
   }
 });
 
-// -----------------------
-// 4) Refresh access token
-// -----------------------
+// Refresh access token
 router.post('/refresh', async (req, res) => {
+  console.log("Route called")
   try {
     const refreshPlain = req.cookies['refresh_token'];
     const refreshId = req.cookies['refresh_token_id'];
@@ -118,9 +109,7 @@ router.post('/refresh', async (req, res) => {
   }
 });
 
-// -----------------------
 // 5) Logout
-// -----------------------
 router.post('/logout', async (req, res) => {
   try {
     const refreshId = req.cookies['refresh_token_id'];

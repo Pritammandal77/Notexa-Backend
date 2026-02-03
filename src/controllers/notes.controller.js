@@ -175,21 +175,39 @@ export const getUserAllNotesByUserId = asyncHandler(async (req, res) => {
 
 })
 
+
 export const deleteNotes = asyncHandler(async (req, res) => {
-    const { notesId } = req.params
+    const { notesId } = req.params;
+    const currUserId = req.user?._id;
 
     if (!notesId) {
-        throw new ApiError("notes ID is required to delete a post")
+        throw new ApiError(400, "Notes ID is required");
     }
 
-    await Notes.findByIdAndDelete(notesId)
+    if (!currUserId) {
+        throw new ApiError(401, "Unauthorized");
+    }
 
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(200, {}, "Note deleted successfully")
-        )
-})
+    const note = await Notes.findById(notesId);
+
+    if (!note) {
+        throw new ApiError(404, "Notes not found");
+    }
+
+    // 🔐 ownership check
+    if (note.seller.toString() !== currUserId.toString()) {
+        throw new ApiError(
+            403,
+            "You are not allowed to delete this note"
+        );
+    }
+
+    await Notes.findByIdAndDelete(notesId);
+
+    return res.status(200).json(
+        new ApiResponse(200, {}, "Note deleted successfully")
+    );
+});
 
 
 export const countNotesDownloads = asyncHandler(async (req, res) => {
@@ -250,15 +268,38 @@ export const countViewsOfNotes = asyncHandler(async (req, res) => {
 
 })
 
-
 export const updateNotesData = asyncHandler(async (req, res) => {
-    const { title, description, subject, className, pagesCount, category, notesId } = req.body;
+    const {
+        title,
+        description,
+        subject,
+        className,
+        pagesCount,
+        category,
+        notesId
+    } = req.body;
 
-    console.log(title)
-    console.log(notesId)
+    const currUserId = req.user?._id;
 
     if (!notesId) {
-        throw new ApiError(400, "Notes not found")
+        throw new ApiError(400, "Notes ID is required");
+    }
+
+    if (!currUserId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const note = await Notes.findById(notesId);
+
+    if (!note) {
+        throw new ApiError(404, "Notes not found");
+    }
+
+    if (note.seller.toString() !== currUserId.toString()) {
+        throw new ApiError(
+            403,
+            "You are not allowed to update this note"
+        );
     }
 
     const updatedNotes = await Notes.findByIdAndUpdate(
@@ -272,15 +313,9 @@ export const updateNotesData = asyncHandler(async (req, res) => {
             category,
         },
         { new: true }
-    )
+    );
 
-    if (!updatedNotes) {
-        throw new ApiError(404, "something went wrong while updating the notes")
-    }
-
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(200, updatedNotes, "Notes updated successfully")
-        )
-})
+    return res.status(200).json(
+        new ApiResponse(200, updatedNotes, "Notes updated successfully")
+    );
+});

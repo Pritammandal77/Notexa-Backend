@@ -35,6 +35,7 @@ import reviewRouter from "./routes/reviews.routes.js";
 import payoutRouter from "./routes/payout.routes.js";
 import withdrawRouter from "./routes/withdraw.routes.js";
 import supportRouter from "./routes/support.routes.js";
+import adminRouter from "./routes/admin.routes.js";
 
 app.use('/api/auth', authRoutes);
 
@@ -51,5 +52,7 @@ app.use("/api/v1/payout", payoutRouter)
 app.use("/api/v1/withdraw", withdrawRouter)
 
 app.use("/api/v1/support", supportRouter)
+
+app.use("/api/v1/admin", adminRouter)
 
 export { app }

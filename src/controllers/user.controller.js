@@ -89,3 +89,4 @@ export const updateProfile = asyncHandler(async (req, res) => {
         new ApiResponse(200, updatedProfile, "Profile updated successfully")
     );
 });
+

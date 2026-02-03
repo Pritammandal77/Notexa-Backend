@@ -40,9 +40,9 @@ export const createRefreshToken = async ({ userId, ip, userAgent }) => {
 //   // Implementation detail left for advanced rotation
 // };
 
-export const consumeRefreshToken = async ({ tokenPlain }) => {
-  // find a refresh token doc by matching hash
-  const all = await RefreshToken.find(); // naive; better: store a tokenId in cookie to find quickly
-  // Better approach: include refresh token id (doc._id) in cookie along with plain token
-  // then fetch doc by id and compare hash -> more efficient
-};
+// export const consumeRefreshToken = async ({ tokenPlain }) => {
+//   // find a refresh token doc by matching hash
+//   const all = await RefreshToken.find(); // naive; better: store a tokenId in cookie to find quickly
+//   // Better approach: include refresh token id (doc._id) in cookie along with plain token
+//   // then fetch doc by id and compare hash -> more efficient
+// };

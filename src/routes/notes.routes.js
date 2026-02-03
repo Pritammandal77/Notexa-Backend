@@ -29,7 +29,7 @@ notesRouter.route("/my-notes").get(
 
 notesRouter.route("/:id").get(getNotesById)
 
-notesRouter.route("/delete-notes/:notesId").delete(deleteNotes)
+notesRouter.route("/delete-notes/:notesId").delete(verifyJWT, deleteNotes)
 
 notesRouter.route("/update-notes-downloads-count").patch(verifyJWT, countNotesDownloads)
 
@@ -39,6 +39,6 @@ notesRouter.route("/reviews/:id").get(fetchAllReviewsById)
 
 notesRouter.route("/count-views/:id").patch(verifyJWT, countViewsOfNotes)
 
-notesRouter.route("/update-notes").patch(updateNotesData)
+notesRouter.route("/update-notes").patch(verifyJWT, updateNotesData)
 
 export default notesRouter

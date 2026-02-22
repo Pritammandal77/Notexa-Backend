@@ -27,6 +27,10 @@ app.use(cookieParser())
 
 app.use(passport.initialize());
 
+app.get("/ping", (req, res) => {
+    res.status(200).send("Server is alive");
+});
+
 import authRoutes from './routes/auth.js'
 import notesRoutes from "./routes/notes.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";

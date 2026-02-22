@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 export const fetchAllUser = asyncHandler(async (req, res) => {
     const users = await User.find({})
         .sort({ createdAt: -1 })
-
+   
     return res
         .status(200)
         .json(

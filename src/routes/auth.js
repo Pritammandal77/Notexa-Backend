@@ -149,7 +149,7 @@ const router = express.Router();
 
 const isProd = process.env.NODE_ENV === 'production';
 
-// Set domain only in production, leave undefined for localhost
+// Set domain only in production, leave undefined for localhost.
 const COOKIE_DOMAIN = isProd ? process.env.COOKIE_DOMAIN : undefined;
 
 // 1) Start Google OAuth
@@ -172,7 +172,7 @@ router.get(
         userAgent,
       });
 
-      // Cookies (works for local & prod)
+      // Cookies (works for local & production)
       const cookieOptions = {
         httpOnly: true,
         secure: isProd,

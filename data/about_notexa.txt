@@ -1,6 +1,7 @@
 Notexa is a platform where students and professionals can buy and sell handwritten or typed notes.
 
-The goal of Notexa is to make high quality study materials affordable and accessible for everyone. The platform connects learners with students, toppers, and professionals who want to share their knowledge.
+The goal of Notexa is to make high quality study materials affordable and accessible for everyone.
+The platform connects learners with students, toppers, and professionals who want to share their knowledge.
 
 Notes on Notexa are available in both handwritten and typed formats.
 

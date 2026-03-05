@@ -5,5 +5,4 @@ Pritam Mandal is the founder and admin of the Notexa platform.
 He is a fullstack developer who built Notexa to help students access affordable study materials and to help knowledge creators earn money by sharing their notes.
 
 More information about Pritam Mandal can be found on his portfolio website:
-
 https://pritammandal.vercel.app

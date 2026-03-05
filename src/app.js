@@ -40,6 +40,8 @@ import payoutRouter from "./routes/payout.routes.js";
 import withdrawRouter from "./routes/withdraw.routes.js";
 import supportRouter from "./routes/support.routes.js";
 import adminRouter from "./routes/admin.routes.js";
+import { loadDocuments } from "./utils/RAG-Utils/vectorStore.js";
+import chatRouter from "./routes/rag.chat.routes.js";
 
 app.use('/api/auth', authRoutes);
 
@@ -58,5 +60,10 @@ app.use("/api/v1/withdraw", withdrawRouter)
 app.use("/api/v1/support", supportRouter)
 
 app.use("/api/v1/admin", adminRouter)
+
+app.use("/api/v1/rag", chatRouter);
+
+loadDocuments();
+
 
 export { app }

@@ -3,7 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-
 export const addNewReview = asyncHandler(async (req, res) => {
     const { rating, review, notesId } = req.body;
     const currUser = req.user._id;
@@ -48,7 +47,6 @@ export const fetchAllReviewsById = asyncHandler(async (req, res) => {
             new ApiResponse(200, reviews, "Reviews fetched successfully")
         )
 })
-
 
 export const deleteReview = asyncHandler(async (req, res) => {
     const { id } = req.params

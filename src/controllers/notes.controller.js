@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import axios from "axios"
 
-
+ 
 export const uploadNotes = asyncHandler(async (req, res) => {
     const {
         title,
@@ -68,7 +68,7 @@ export const uploadNotes = asyncHandler(async (req, res) => {
     );
 });
 
-
+ 
 
 export const getAllNotes = asyncHandler(async (req, res) => {
     const notes = await Notes.find({})
@@ -194,7 +194,7 @@ export const deleteNotes = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Notes not found");
     }
 
-    // 🔐 ownership check
+    // ownership check
     if (note.seller.toString() !== currUserId.toString()) {
         throw new ApiError(
             403,

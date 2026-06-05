@@ -56,7 +56,6 @@ export const createNewTransaction = asyncHandler(async (req, res) => {
         { new: true }
     );
 
-
     return res.status(201).json(
         new ApiResponse(201, transaction, "Transaction created successfully")
     );

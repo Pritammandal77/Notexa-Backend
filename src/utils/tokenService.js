@@ -4,11 +4,10 @@ import bcrypt from 'bcryptjs';
 import refreshToken from '../models/refreshToken.js';
 import { User } from '../models/user.model.js';
 
-const ACCESS_EXPIRES_IN = '2h'; // for JWT library
+const ACCESS_EXPIRES_IN = '2h';
 const REFRESH_EXPIRES_DAYS = 30;
 
 export const createAccessToken = (user) => {
-  // minimal payload
   const payload = { sub: user._id.toString(), email: User.email };
   return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: ACCESS_EXPIRES_IN });
 };

@@ -26,7 +26,7 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 app.use(passport.initialize());
-
+ 
 app.get("/ping", (req, res) => {
     res.status(200).send("Server is alive");
 });
@@ -48,7 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use("/api/v1/notes", notesRoutes)
 
 app.use('/api/v1/payments', paymentRoutes)
-
+ 
 app.use("/api/v1/user", userRoutes)
 
 app.use("/api/v1/review", reviewRouter)

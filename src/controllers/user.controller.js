@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const addNoteToPurchased = asyncHandler(async (req, res) => {
     const { notesId } = req.body
@@ -39,7 +40,7 @@ export const getPurchasedNotes = asyncHandler(async (req, res) => {
             new ApiResponse(200, downloadedNotes, "Downloaded notes fetched successfully")
         )
 })
-
+ 
 export const getUserById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
@@ -53,7 +54,6 @@ export const getUserById = asyncHandler(async (req, res) => {
 })
 
 
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const updateProfile = asyncHandler(async (req, res) => {
     const { fullName, aboutUser, linkedinLink, instagramLink } = req.body;

@@ -2,9 +2,7 @@ import { Wallet } from "../models/wallet.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-
 export const createOrFetchWallet = asyncHandler(async (req, res) => {
-
     const user = req.user._id
 
     const isAlreadyWalletExists = await Wallet.findOne({ user: user })

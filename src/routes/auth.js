@@ -154,7 +154,7 @@ const COOKIE_DOMAIN = isProd ? process.env.COOKIE_DOMAIN : undefined;
 
 // 1) Start Google OAuth
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
+ 
 // 2) Google Callback
 router.get(
   '/google/callback',

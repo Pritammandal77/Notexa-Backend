@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import axios from "axios"
 
- 
+
 export const uploadNotes = asyncHandler(async (req, res) => {
     const {
         title,
@@ -68,7 +68,7 @@ export const uploadNotes = asyncHandler(async (req, res) => {
     );
 });
 
- 
+
 
 export const getAllNotes = asyncHandler(async (req, res) => {
     const notes = await Notes.find({})
@@ -318,4 +318,48 @@ export const updateNotesData = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(200, updatedNotes, "Notes updated successfully")
     );
+});
+
+
+export const searchNotes = asyncHandler(async (req, res) => {
+    const { notes, subject, category, className } = req.query;
+
+    // Creating a dynamic query object
+    let queryConditions = {};
+
+    //If a general search keyword is typed
+    if (notes) {
+        queryConditions.$or = [
+            { title: { $regex: notes, $options: "i" } },
+            { subject: { $regex: notes, $options: "i" } },
+            { category: { $regex: notes, $options: "i" } },
+            { className: { $regex: notes, $options: "i" } },
+            { description: { $regex: notes, $options: "i" } } // Even searches inside descriptions!
+        ];
+    }
+
+    // If a user clicks a specific tag/category
+    if (subject) {
+        queryConditions.subject = { $regex: `^${subject}$`, $options: "i" }; // Exact match case-insensitive
+    }
+    if (category) {
+        queryConditions.category = { $regex: `^${category}$`, $options: "i" };
+    }
+    if (className) {
+        queryConditions.className = { $regex: `^${className}$`, $options: "i" };
+    }
+
+    console.log("Incoming Query Parameters:", req.query);
+    console.log("Generated MongoDB Filter Conditions:", queryConditions);
+
+
+    const searchedNotes = await Notes.find(queryConditions)
+        .populate("seller", "fullName email") // Populates seller details automatically for your cards
+        .sort({ createdAt: -1 }); // Shows newest notes first
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, searchedNotes, "Notes fetched successfully")
+        );
 });

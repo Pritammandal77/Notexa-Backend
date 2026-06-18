@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { countNotesDownloads, countViewsOfNotes, deleteNotes, downloadNotes, getAllNotes, getCurrentUserNotes, getNotesById, getUserAllNotesByUserId, updateNotesData, uploadNotes } from "../controllers/notes.controller.js";
+import { countNotesDownloads, countViewsOfNotes, deleteNotes, downloadNotes, getAllNotes, getCurrentUserNotes, getNotesById, getUserAllNotesByUserId, searchNotes, updateNotesData, uploadNotes } from "../controllers/notes.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { addNewReview, fetchAllReviewsById } from "../controllers/review.controller.js";
@@ -18,27 +18,30 @@ notesRouter.route("/upload-notes").post(
 
 notesRouter.route("/all-notes").get(getAllNotes)
 
-notesRouter.route("/:userId/all-notes").get(getUserAllNotesByUserId)
-
-notesRouter.route("/download/:id").get(downloadNotes)
+notesRouter.route("/search").get(searchNotes)
 
 notesRouter.route("/my-notes").get(
     verifyJWT,
     getCurrentUserNotes
 );
 
-notesRouter.route("/:id").get(getNotesById)
-
-notesRouter.route("/delete-notes/:notesId").delete(verifyJWT, deleteNotes)
+notesRouter.route("/update-notes").patch(verifyJWT, updateNotesData)
 
 notesRouter.route("/update-notes-downloads-count").patch(verifyJWT, countNotesDownloads)
 
 notesRouter.route("/add-review").post(verifyJWT, addNewReview)
 
+
 notesRouter.route("/reviews/:id").get(fetchAllReviewsById)
 
 notesRouter.route("/count-views/:id").patch(verifyJWT, countViewsOfNotes)
 
-notesRouter.route("/update-notes").patch(verifyJWT, updateNotesData)
+notesRouter.route("/delete-notes/:notesId").delete(verifyJWT, deleteNotes)
+
+notesRouter.route("/download/:id").get(downloadNotes)
+
+notesRouter.route("/:userId/all-notes").get(getUserAllNotesByUserId)
+
+notesRouter.route("/:id").get(getNotesById)
 
 export default notesRouter

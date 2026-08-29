@@ -5,7 +5,7 @@ export const getPdfPageCount = async (filePath) => {
   try {
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdf(dataBuffer);
-    return data.numpages; // 👈 total pages count
+    return data.numpages; // total pages count
   } catch (error) {
     console.error("Error reading PDF:", error);
     return 0;

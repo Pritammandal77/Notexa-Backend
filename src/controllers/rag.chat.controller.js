@@ -18,7 +18,7 @@ export const RAGChat = asyncHandler(async (req, res) => {
     const context = results.map(r => r.content).join("\n");
 
     const completion = await groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
         messages: [
             {
                 role: "system",
@@ -26,6 +26,7 @@ export const RAGChat = asyncHandler(async (req, res) => {
 You are Notexa AI assistant.
 
 Answer ONLY from the given context.
+If users greet you : "Chat with them as a Notexa AI Assistant "
 If the answer is not in the context, say:
 "I don't have information about that."
 

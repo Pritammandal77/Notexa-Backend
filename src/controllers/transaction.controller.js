@@ -40,7 +40,6 @@ export const createNewTransaction = asyncHandler(async (req, res) => {
         paymentId
     });
 
-
     // update seller wallet
     await Wallet.findOneAndUpdate(
         { user: notes.seller },          // seller ka wallet

@@ -352,7 +352,6 @@ export const searchNotes = asyncHandler(async (req, res) => {
     console.log("Incoming Query Parameters:", req.query);
     console.log("Generated MongoDB Filter Conditions:", queryConditions);
 
-
     const searchedNotes = await Notes.find(queryConditions)
         .populate("seller", "fullName email") // Populates seller details automatically for your cards
         .sort({ createdAt: -1 }); // Shows newest notes first
